@@ -18,11 +18,17 @@ MAX_CHARS = 140
 
 
 def validate(text):
-    """Enforce the RULES.txt gate: UTF-8, 1-140 chars, not only whitespace."""
+    """Enforce the RULES.txt gate: UTF-8, 1-140 chars, not only whitespace.
+
+    Also rejects leading/trailing whitespace: a text message read on a
+    lock screen should not start or end with a blank.
+    """
     if not isinstance(text, str):
         raise ValueError("entry must be text")
     if not text.strip():
         raise ValueError("entry must not be only whitespace")
+    if text != text.strip():
+        raise ValueError("entry must not start or end with whitespace")
     if "\n" in text or "\r" in text:
         raise ValueError("entry must be a single line")
     if len(text) > MAX_CHARS:
